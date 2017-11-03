@@ -1,0 +1,16 @@
+{% extends "TrainBundle::index.html.twig" %}
+
+{% block title %} Editer mon profile {% endblock %}
+
+{% block fos_user_content %}
+
+    {% trans_default_domain 'FOSUserBundle' %}
+
+    {{ form_start(form, { 'action': path('fos_user_profile_edit'), 'attr': { 'class': 'fos_user_profile_edit' } }) }}
+    {{ form_widget(form) }}
+    <div>
+        <input class="btn btn-dark" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
+    </div>
+    {{ form_rest(form) }}
+
+{% endblock fos_user_content %}

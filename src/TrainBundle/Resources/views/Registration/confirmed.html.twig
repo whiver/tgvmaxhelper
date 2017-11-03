@@ -1,0 +1,13 @@
+{% extends "TrainBundle::index.html.twig" %}
+
+{% block title %} Confirmation du compte {% endblock %}
+
+{% block fos_user_content %}
+
+    {% trans_default_domain 'FOSUserBundle' %}
+
+    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
+    {% if targetUrl %}
+    <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>
+    {% endif %}
+{% endblock fos_user_content %}

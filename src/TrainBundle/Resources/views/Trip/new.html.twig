@@ -1,0 +1,17 @@
+{% extends "TrainBundle::index.html.twig" %}
+
+{% block title %} Créer un voyage {% endblock %}
+
+{% block content %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+                <div class="flash-{{ label }}">
+                    {{ message }}
+                </div>
+        {% endfor %}
+    {% endfor %}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}

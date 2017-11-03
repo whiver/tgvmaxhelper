@@ -1,0 +1,10 @@
+{% block subject 'TGVmax Helper' %}
+
+{% block body_html %}
+   {% for trip in trips %}
+       {{ trip.departure_date }}
+   {% endfor %}
+{% endblock %}
+
+{% block body_text %}
+{% endblock %}

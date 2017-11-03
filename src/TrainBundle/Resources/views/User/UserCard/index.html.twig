@@ -1,0 +1,21 @@
+{% extends "TrainBundle::index.html.twig" %}
+
+{% block title %} Carte TGVmax {% endblock %}
+
+{% block content %}
+
+    {% if card %}
+        <div class="usercard">
+            Type de carte: {{ card.discountCard.name }} <br />
+            Numéro de carte: {{ card.discountCardNumber }} <br /><br />
+        </div>
+        <div class="actions">
+            <a href="{{ path('edit_card', {id : card.Id}) }}" class="btn btn-dark">Modifier la carte</a>
+            <a href="{{ path('delete_card', {id : card.Id}) }}" class="btn btn-danger">Supprimer la carte</a>
+        </div>
+    {% else %}
+        <div class="actions">
+            <a href="{{ path('add_card') }}" class="btn btn-dark">Ajouter une carte TGVmax</a>
+        </div>
+    {% endif %}
+{% endblock %}

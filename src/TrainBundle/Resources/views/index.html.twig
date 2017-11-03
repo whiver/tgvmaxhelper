@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="TGVmax Helper">
+    <meta name="author" content="Alexis Camilleri">
+
+    <title>TGVmax Helper</title>
+
+    {% block stylesheets %}
+        {% stylesheets '@TrainBundle/Resources/public/css/bootstrap.min.css'
+                       '@TrainBundle/Resources/public/css/style.css'
+                       '@TrainBundle/Resources/public/css/select2.min.css'
+                       '@TrainBundle/Resources/public/css/*' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="{{ path('homepage') }}">TGVmax Helper</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbars">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ path('homepage') }}">Accueil <span class="sr-only">(current)</span></a>
+            </li>
+            <div class="d-block d-md-none d-lg-none d-xl-none">
+                {% if app.user %}
+                    <a class="nav-link" href="{{ path('fos_user_profile_show') }}">{{ app.user.name }} {{ app.user.surname }}</a>
+                    <a class="nav-link" href="{{ path('card') }}">Carte TGVmax</a>
+                    <a href="{{ path('trip') }}" class="nav-link">Voir mes voyages</a>
+                    <div class="nav-link"></div>
+                    <a class="nav-link" href="{{ path('fos_user_security_logout') }}">Se déconnecter</a>
+                {% else %}
+                    <a href="{{ path('fos_user_security_login') }}" class="nav-link">Se connecter</a>
+                    <a href="{{ path('fos_user_registration_register') }}" class="nav-link">S'inscrire</a>
+                {% endif %}
+            </div>
+        </ul>
+
+        <div class="d-none d-md-block d-lg-block d-xl-block">
+            {% if app.user %}
+                <div class="dropdown">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{ app.user.name }} {{ app.user.surname }}
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{{ path('fos_user_profile_show') }}">Profile</a>
+                            <a class="dropdown-item" href="{{ path('card') }}">Carte TGVmax</a>
+                            <a href="{{ path('trip') }}" class="dropdown-item">Voir mes voyages</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ path('fos_user_security_logout') }}">Se déconnecter</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{{ path('fos_user_security_login') }}" class="btn btn-secondary">Se connecter</a>
+                <a href="{{ path('fos_user_registration_register') }}" class="btn btn-secondary">S'inscrire</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<main role="main" class="container">
+
+    <div class="starter-template">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-10">
+                <div class="card bg-light">
+                    <div class="card-header">{% block title %}{% endblock %}</div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            {% for type, messages in app.session.flashBag.all %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                                        {{ message|trans({}, 'FOSUserBundle') }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                            {% block fos_user_content %}{% endblock %}
+                            {% block content %}{% endblock %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main><!-- /.container -->
+
+{% block javascripts %}
+    {% javascripts '@TrainBundle/Resources/public/js/jquery-3.2.1.min.js'
+                   '@TrainBundle/Resources/public/js/popper.min.js'
+                   '@TrainBundle/Resources/public/js/bootstrap.min.js'
+                   '@TrainBundle/Resources/public/js/moment-with-locales.js'
+                   '@TrainBundle/Resources/public/js/Intimidatetime.min.js'
+                   '@TrainBundle/Resources/public/js/select2.min.js'
+                   '@TetranzSelect2EntityBundle/Resources/public/js/select2entity.js'
+                   '@TrainBundle/Resources/public/js/i18n/fr.js'
+                   '@TrainBundle/Resources/public/js/i18n/Intimidatetime-fr.js'
+                   '@TrainBundle/Resources/public/js/main.js'
+                   '@TrainBundle/Resources/public/js/jquery.xdomainrequest.min.js'
+                   '@TrainBundle/Resources/public/js/*' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+</body>
+</html>

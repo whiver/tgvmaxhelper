@@ -1,0 +1,15 @@
+{% extends "TrainBundle::index.html.twig" %}
+
+{% block title %} <h5>{{ trip.departureStationId.name }} => {{ trip.arrivalStationId.name }}</h5> {% endblock %}
+
+{% block content %}
+    <div class="trip">
+        Départ: {{ trip.departureStationId.name }}<br />
+        Arrivée: {{ trip.arrivalStationId.name }}<br />
+        Date: {{ trip.fromDepartureDate.date|date("d/m/Y à H:i") }}<br />
+    </div>
+    <div class="actions">
+        <a href="{{ path('edit_trip', {id : trip.Id}) }}" class="btn btn-dark">Modifier le voyage</a>
+        <a href="{{ path('delete_trip', {id : trip.Id}) }}" class="btn btn-danger">Supprimer le voyage</a>
+    </div>
+{% endblock %}

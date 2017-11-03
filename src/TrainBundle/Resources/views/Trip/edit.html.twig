@@ -1,0 +1,10 @@
+{% extends "TrainBundle::index.html.twig" %}
+
+{% block title %} <h5>{{ trip.departureStationId.name }} => {{ trip.arrivalStationId.name }}</h5> {% endblock %}
+
+{% block content %}
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+{% endblock %}

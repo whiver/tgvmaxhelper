@@ -1,0 +1,63 @@
+{% extends "TrainBundle::index.html.twig" %}
+
+{% block title %} <h5>Liste des 8 derniers voyages</h5> {% endblock %}
+
+{% block content %}
+
+    {% for trip in trips|reverse %}
+        <div class="card {% if trip.toDepartureDate.date|date("d/m/Y H:i") < "now"|date("d/m/Y H:i") %} finished {% endif %}">
+            <div class="card-body {% if trip.toDepartureDate.date|date("d/m/Y H:i") < "now"|date("d/m/Y H:i") %} progress-bar progress-bar-striped progress-bar-striped {% endif %}">
+                <h5 class="card-title">Voyage de {{ trip.departureStationId.name }} à {{ trip.arrivalStationId.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                        Train au départ:
+                        {% if trip.fromDepartureDate.date|date("d/m/Y") == trip.toDepartureDate.date|date("d/m/Y") %}
+                            <span class="badge badge-pill badge-dark">Le {{ trip.fromDepartureDate.date|date("d/m/Y") }} entre {{ trip.fromDepartureDate.date|date("H:i") }} et {{ trip.toDepartureDate.date|date("H:i") }}</span><br />
+                        {% else %}
+                            <span class="badge badge-pill badge-dark">Le {{ trip.fromDepartureDate.date|date("d/m/Y H:i") }} au {{ trip.toDepartureDate.date|date("d/m/Y H:i") }}</span><br />
+                        {% endif %}
+                </h6>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Status:
+                    {% set date30 = "now"|date_modify("+30 day") %}
+                    {% if trip.toDepartureDate.date > date30.date %}
+                        <span class="badge badge-info">En attente: votre départ est supérieure à 30jours</span>
+                    {% elseif trip.IsReserved and trip.order %}
+                        <span class="badge badge-success">Voyage réservé</span>
+                    {% elseif trip.order and not trip.IsReserved %}
+                        <span class="badge badge-info">En recherche</span> <span class="badge badge-danger">Erreur sur la dernière recherche</span>
+                    {% elseif trip.IsNotified %}
+                        <span class="badge badge-info">Vous avez été notifié des trajets disponibles</span>
+                    {% elseif trip.toDepartureDate.date|date("d/m/Y H:i") < date('+30days', 'Europe/Paris') and trip.toDepartureDate.date|date("d/m/Y H:i") > "now"|date("d/m/Y H:i") %}
+                        <span class="badge badge-info">En recherche</span>
+                    {% else %}
+                        <span class="badge badge-warning">Terminée sans réservation valable</span>
+                    {% endif %}
+                </h6>
+                <p class="card-text">
+                    <a target="_blank" data-toggle="tooltip" data-placement="top" title="Voir sur Google Maps" href="https://www.google.com/maps/place/Gare+{{ trip.departureStationId.name }}" alt="{{ trip.departureStationId.name }}">Gare de départ: {{ trip.departureStationId.name }}</a><br />
+                    <a target="_blank" data-toggle="tooltip" data-placement="top" title="Voir sur Google Maps" href="https://www.google.com/maps/place/Gare+{{ trip.arrivalStationId.name }}" alt="{{ trip.arrivalStationId.name }}">Gare d'arrivée: {{ trip.arrivalStationId.name }}</a><br />
+                    {% if trip.IsReserved %}
+                        Date de départ du train: {{ trip.order.departureDate|date("d/m/Y H:i") }}<br />
+                        Date d'arrivée du train: {{ trip.order.arrivalDate|date("d/m/Y H:i") }}<br />
+                    {% else %}
+                </p>
+                {% if not trip.IsReserved %}
+                    <a href="{{ path('edit_trip', { 'id' : trip.id }) }}" class="card-link btn btn-info btn-sm">Editer le voyage</a>
+                {% endif %}
+                {% if not trip.IsReserved %}
+                    <a href="{{ path('delete_trip', { 'id' : trip.id }) }}" class="card-link btn btn-danger btn-sm">Supprimer le voyage</a>
+                {% endif %}
+                {% if trip.IsReserved and trip.order %}
+                    <a href="{{ path('cancel_trip', { 'id' : trip.id }) }}" class="card-link btn btn-warning btn-sm">Annuler le billet</a>
+                {% endif %}
+                {% if trip.IsReserved and trip.order %}
+                    <a target="_blank" href="https://www.trainline.fr/order/{{ trip.order.orderId }}" class="card-link btn btn-success btn-sm">Voir votre billet</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        <br /><br />
+    {% endfor %}
+    <a href="{{ path('new_trip') }}" class="btn btn-dark btn-sm">Ajouter un voyage</a>
+
+{% endblock content %}
