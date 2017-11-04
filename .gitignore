@@ -22,3 +22,5 @@ phpunit.xml.dist
 .vagrant
 .DS_Store
 Vagrantfile
+web/js/*
+web/css/*
