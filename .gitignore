@@ -24,3 +24,5 @@ phpunit.xml.dist
 Vagrantfile
 web/js/*
 web/css/*
+composer-setup.php
+composer.phar
