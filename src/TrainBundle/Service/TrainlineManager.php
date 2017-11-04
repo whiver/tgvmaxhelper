@@ -111,6 +111,60 @@ class TrainlineManager
         }
 
         /**
+         * If no train is found with from date, retry with to date
+         */
+        if (!$trainCompatibleWithTheSearch) {
+            /**
+             * Get All Train available from DepartureDate to DepartureDate
+             * Create Payload with all information
+             * Send request, catch error and store in DB for User and in Logger for Admin
+             */
+            $payload = array("search" => array("departure_date" => $trip->getToDepartureDate()->format('Y-m-d\TH:i:sP'),"return_date" => null,"passengers" => $passenger,"systems" => array("sncf","db","busbud","idtgv","ouigo","trenitalia","ntv","hkx","renfe","benerail","ocebo","westbahn","locomore","flixbus","timetable"),"exchangeable_part" => null,"departure_station_id" => $trip->getDepartureStationId()->getId(),"via_station_id"=>null,"arrival_station_id" => $trip->getArrivalStationId()->getId(),"exchangeable_pnr_id"=>null));
+            $client = new GuzzleHttp\Client();
+            try {
+                $response = $client->post($this::API_URL.'/search', [
+                    'headers' => [
+                        'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+                        'x-user-agent' => 'CaptainTrain/1509467302(web) (Ember 2.12.2)'
+                    ],
+                    'json' => $payload
+                ]);
+            }
+            catch (\Exception $e) {
+                $this->LogSystem("alert", '[CRON] :: Error during search train available', $e->getMessage(), $this::API_URL.'/search', $payload);
+
+                $order->setError(true);
+                $this->em->persist($order);
+                $this->em->flush();
+                return;
+            }
+
+            /**
+             * Decode response from guzzle
+             * If there are no train available -> exit
+             */
+            $trainAvailable = json_decode($response->getBody()->getContents(), true);
+            if (!$trainAvailable['trips']) {
+                exit();
+            }
+
+            /**
+             * For each train available remove all tgvmax with no places
+             * and remove all train out of datetime range
+             */
+            $trainCompatibleWithTheSearch = array();
+            foreach ($trainAvailable['trips'] as $train) {
+                if (isset($train['long_unsellable_reason']) AND $train['long_unsellable_reason'] === "Il n’y a plus de places TGVmax disponibles sur ce trajet.") {
+                    continue;
+                }
+                if (!($train['departure_date'] >= $trip->getFromDepartureDate()->format('Y-m-d\TH:i:sP') AND $train['departure_date'] <= $trip->getToDepartureDate()->format('Y-m-d\TH:i:sP'))) {
+                    continue;
+                }
+                $trainCompatibleWithTheSearch[] = $train;
+            }
+        }
+
+        /**
          * For last trains, i compile trip and folder array in only one.
          * If lastTrainCompatible is null -> exit
          */
