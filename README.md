@@ -21,11 +21,12 @@ You need to have some skills on symfony for install correctly this project.
 3. Run `php bin\console doctrine:schema:update` for install DB
 4. In the database run this: 
 `INSERT INTO discount_card (name, reference) VALUES ('TGV MAX', 'SNCF.HappyCard');`
-5. Add cron, for run every time this: `php bin\console train:searchandbooktrip`
-6. Create account
-7. Add your TGVmax card
-8. Add trip you want to book with your TGVmax card
-9. Wait and See :D
+5. In the database, import `stations.sql`
+6. Add cron, for run every time this: `php bin\console train:searchandbooktrip`
+7. Create account
+8. Add your TGVmax card
+9. Add trip you want to book with your TGVmax card
+10. Wait and See :D
 
 If you have some trouble with:
 - CSRF Token: Check your right on var/caches
