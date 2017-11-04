@@ -33,16 +33,14 @@ class Trip
     private $order;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="departure_station_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Station")
+     * @ORM\JoinColumn(name="departure_station_id", referencedColumnName="id")
      */
     private $departureStationId;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="arrival_station_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Station")
+     * @ORM\JoinColumn(name="arrival_station_id", referencedColumnName="id")
      */
     private $arrivalStationId;
 
