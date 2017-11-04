@@ -31,7 +31,6 @@ class TripType extends AbstractType
         $builder->add('departure_station_id',Select2EntityType::class, array(
                 'multiple' => false,
                 'remote_path' => $this->router->generate("search_station"),
-                'class' => Station::class,
                 'primary_key' => 'id',
                 'text_property' => 'name',
                 'minimum_input_length' => 2,
@@ -46,7 +45,6 @@ class TripType extends AbstractType
             ->add('arrival_station_id',Select2EntityType::class, array(
                 'multiple' => false,
                 'remote_path' => $this->router->generate("search_station"),
-                'class' => Station::class,
                 'primary_key' => 'id',
                 'text_property' => 'name',
                 'minimum_input_length' => 2,
