@@ -43,13 +43,19 @@
                 </p>
                 {% if not trip.IsReserved %}
                     <a href="{{ path('edit_trip', { 'id' : trip.id }) }}" class="card-link btn btn-info btn-sm">Editer le voyage</a>
+                {% endif %}
+                {% if not trip.IsReserved %}
                     <a href="{{ path('delete_trip', { 'id' : trip.id }) }}" class="card-link btn btn-danger btn-sm">Supprimer le voyage</a>
-                {% elseif trip.IsReserved and trip.order %}
+                {% endif %}
+                {% if trip.IsReserved and trip.order %}
                     <a href="{{ path('cancel_trip', { 'id' : trip.id }) }}" class="card-link btn btn-warning btn-sm">Annuler le billet</a>
+                {% endif %}
+                {% if trip.IsReserved and trip.order %}
                     <a target="_blank" href="https://www.trainline.fr/order/{{ trip.order.orderId }}" class="card-link btn btn-success btn-sm">Voir votre billet</a>
                 {% endif %}
             </div>
         </div>
+        {% endif %}
         <br /><br />
     {% endfor %}
     <a href="{{ path('new_trip') }}" class="btn btn-dark btn-sm">Ajouter un voyage</a>
