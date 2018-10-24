@@ -1,4 +1,8 @@
 # TGVmax Helper
+
+**ℹ This project is a fork of [the one from krysenn](https://github.com/krysennn/tgvmaxhelper).
+Since the main project has been cut, this one is just a backup of the latest version available.**
+
 > [en] Book TGVmax tickets automatically
 
 > [fr] Permet de réserver ses billets TGVmax automatiquement.
